@@ -1,0 +1,3 @@
+displayName = Seal the Heavens
+author = Septimus
+version = 0.1

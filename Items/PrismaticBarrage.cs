@@ -19,7 +19,7 @@ namespace SealTheHeavens.Items
             item.height = 30;
             item.magic = true;
             item.mana = 12;
-            item.damage = 45;
+            item.damage = 30;
             item.useTime = 22;
             item.useAnimation = 22;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -37,7 +37,7 @@ namespace SealTheHeavens.Items
             Vector2 speed = new Vector2(speedX, speedY);
             for (int i = -1; i <= 1; i++)
             {
-                type = i % 2 == 0 ? ModContent.ProjectileType<PrismaBlade>() : ModContent.ProjectileType<BlackBlade>();
+                type = i % 2 == 0 ? ModContent.ProjectileType<BlackBlade>() : ModContent.ProjectileType<BlackBlade>();
                 Projectile.NewProjectile(position, speed.RotatedBy(MathHelper.ToRadians(10) * i), type, damage, knockBack, player.whoAmI);
             }
             return false;

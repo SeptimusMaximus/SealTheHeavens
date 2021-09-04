@@ -17,8 +17,8 @@ namespace SealTheHeavens.Projectiles
         public override void SetDefaults()
         {
 			projectile.aiStyle = 0;
-			projectile.width = 32;
-			projectile.height = 38;
+			projectile.width = 30;
+			projectile.height = 30;
             projectile.friendly = true;
 			projectile.hostile = false;
 			projectile.tileCollide = false;

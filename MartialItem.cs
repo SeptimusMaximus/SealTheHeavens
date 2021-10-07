@@ -52,7 +52,7 @@ namespace SealTheHeavens
 			}
 
 			//change the color code here to set the color, look up for color code picker and replace the code below. I'm using this for my Artist and Programmer classes
-			tooltips.Add(new TooltipLine(mod, "SealTheHeavens Martial Item", $"[c/faa7ad:< Martial >]"));
+			tooltips.Insert(1, new TooltipLine(mod, "SealTheHeavens Martial Item", $"[c/faa7ad:-Martial Class-]"));
 		}
 		public override void HoldItem(Player player)
         {

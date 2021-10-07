@@ -21,8 +21,8 @@ namespace SealTheHeavens.Items
 			item.damage = 40;
 			qi = 50; //uses 50 qi per use, variable in MartialItem
 			item.crit = 2;
-            item.width = 38;
-            item.height = 38;
+            item.width = 46;
+            item.height = 36;
             item.useTime = 20;
             item.useAnimation = 20;
 						item.noUseGraphic = true;

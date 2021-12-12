@@ -22,14 +22,6 @@ namespace SealTheHeavens
             npc.life = 1;
             npc.active = false;
         }
-        public static class Vector2Helper
-        {
-            public static Vector2 Resize(Vector2 first, float magnitude) 
-            {
-                Vector2 normal = first.SafeNormalize(Vector2.UnitX);
-                return normal * magnitude;
-            }
-        }
         public static class Projectiles
         {
             public static void ProjCircle(Vector2 pos, int amount, int type, float speed, int damage)

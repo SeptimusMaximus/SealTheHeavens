@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -15,7 +16,8 @@ namespace SealTheHeavens.Items.Martial
 {
 	public class MartialPlayer : ModPlayer
 	{
-		public static MartialPlayer ModPlayer(Player player) {
+		public static MartialPlayer ModPlayer(Player player)
+		{
 			return player.GetModPlayer<MartialPlayer>();
 		}
 
@@ -37,18 +39,22 @@ namespace SealTheHeavens.Items.Martial
 
 		public bool martialItem = false;
 
-		public override void Initialize() {
+		public override void Initialize()
+		{
 
 		}
 
-		public override void ResetEffects() {
+		public override void ResetEffects()
+		{
 			ResetVariables();
 		}
-		public override void UpdateDead() {
+		public override void UpdateDead()
+		{
 			ResetVariables();
 		}
 
-		private void ResetVariables() {
+		private void ResetVariables()
+		{
 			martialDamage = 1f;
 			martialKB = 0f;
 			martialCrit = 4;
@@ -58,16 +64,18 @@ namespace SealTheHeavens.Items.Martial
 			martialItem = false;
 		}
 
-		public override void PostUpdateMiscEffects() {
+		public override void PostUpdateMiscEffects()
+		{
 			UpdateResource();
 		}
 
-		private void UpdateResource() {
+		private void UpdateResource()
+		{
 			if (qiRegenDelay > 0)
 			{
 				qiRegenDelay--;
 				qiRegenDelay -= qiRegenDelayBonus;
-				if ((player.velocity.X == 0f && player.velocity.Y == 0f) || player.grappling[0] >= 0 /*|| manaRegenBuff*/)
+				if ((Player.velocity.X == 0f && Player.velocity.Y == 0f) || Player.grappling[0] >= 0 /*|| manaRegenBuff*/)
 				{
 					qiRegenDelay--;
 				}
@@ -80,16 +88,16 @@ namespace SealTheHeavens.Items.Martial
 			{
 				qiRegenDelay = 0;
 				qiRegen = statQiMax / 7 + 1 + qiRegenBonus;
-				if ((player.velocity.X == 0f && player.velocity.Y == 0f) || player.grappling[0] >= 0 /*|| manaRegenBuff*/)
+				if ((Player.velocity.X == 0f && Player.velocity.Y == 0f) || Player.grappling[0] >= 0 /*|| manaRegenBuff*/)
 				{
 					qiRegen += statQiMax / 2;
 				}
-				float num2 = (float)statQi / (float)statQiMax * 0.8f + 0.2f;
+				float num2 = statQi / statQiMax * 0.8f + 0.2f;
 				/*if (manaRegenBuff)
 				{
 					num2 = 1f;
 				}*/
-				qiRegen = (int)((double)((float)qiRegen * num2) * 1.15);
+				qiRegen = (int)((double)(qiRegen * num2) * 1.15);
 			}
 			else
 			{
@@ -109,12 +117,12 @@ namespace SealTheHeavens.Items.Martial
 				{
 					continue;
 				}
-				if (player.whoAmI == Main.myPlayer && flag)
+				if (Player.whoAmI == Main.myPlayer && flag)
 				{
-					Main.PlaySound(25);
+					SoundEngine.PlaySound(SoundID.MaxMana);
 					for (int i = 0; i < 5; i++)
 					{
-						int num3 = Dust.NewDust(player.position, player.width, player.height, 45, 0f, 0f, 255, Color.Orange, (float)Main.rand.Next(20, 26) * 0.1f);
+						int num3 = Dust.NewDust(Player.position, Player.width, Player.height, DustID.ManaRegeneration, 0f, 0f, 255, Color.Orange, (float)Main.rand.Next(20, 26) * 0.1f);
 						Main.dust[num3].noLight = true;
 						Main.dust[num3].noGravity = true;
 						Main.dust[num3].velocity *= 0.5f;
@@ -124,33 +132,40 @@ namespace SealTheHeavens.Items.Martial
 			}
 			if (martialItem /*&& (item.type != 127 || !spaceGun)*/) //bools for the space gun and meteorite set bonus, left them here just in case
 			{
-				qiRegenDelay = (int)maxQiRegenDelay;
+				qiRegenDelay = maxQiRegenDelay;
 			}
 		}
 
-		public override void ProcessTriggers(TriggersSet triggersSet) {
+		public override void ProcessTriggers(TriggersSet triggersSet)
+		{
 
 		}
 
-		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer) {
-			ModPacket packet = mod.GetPacket();
-			packet.Write((byte)player.whoAmI);
+		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+		{
+			ModPacket packet = Mod.GetPacket();
+			packet.Write((byte)Player.whoAmI);
 			packet.Write(statQi);
 			packet.Send(toWho, fromWho);
 		}
-		public override TagCompound Save() {
-			return new TagCompound {
+		public override void SaveData(TagCompound tag)
+		{
+			new TagCompound()
+			{
 				{"statQi", statQi},
 			};
 		}
-		public override void Load(TagCompound tag) {
+		public override void LoadData(TagCompound tag)
+		{
 			statQi = tag.GetInt("statQi");
 		}
-		public override void SendClientChanges(ModPlayer clientPlayer) {
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
 			MartialPlayer clone = clientPlayer as MartialPlayer;
-			if (clone.statQi != statQiMax) {
-				var packet = mod.GetPacket();
-				packet.Write((byte)player.whoAmI);
+			if (clone.statQi != statQiMax)
+			{
+				var packet = Mod.GetPacket();
+				packet.Write((byte)Player.whoAmI);
 				packet.Write(statQi);
 				packet.Send();
 			}

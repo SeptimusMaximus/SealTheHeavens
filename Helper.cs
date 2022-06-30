@@ -12,7 +12,7 @@ namespace SealTheHeavens
     {
         public static ModPlayer Revenant(this Player player)
         {
-            return player.GetModPlayer<MyPlayer>();
+            return player.GetModPlayer<STHPlayer>();
         }
         public static void Kill(this NPC npc)
         {
@@ -41,7 +41,7 @@ namespace SealTheHeavens
             public static void DrawChain(Texture2D texture, Vector2 from, Vector2 to, Color color2)
             {
                 Rectangle? sourceRectangle = new Rectangle?();
-                Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+                Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
                 float height = texture.Height;
                 Vector2 vector1 = from - to;
                 float rotation = (float)Math.Atan2(vector1.Y, vector1.X) - 1.57f;
@@ -78,7 +78,7 @@ namespace SealTheHeavens
                     shader.UseSecondaryColor(color2);
                     shader.Apply(null);
                 }
-                Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White, 1);
+                Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White, 1);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
             }
@@ -95,7 +95,7 @@ namespace SealTheHeavens
                     shader.UseSecondaryColor(color2);
                     shader.Apply(null);;
                 }
-                Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White, 1);
+                Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White, 1);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
             }
@@ -116,7 +116,7 @@ namespace SealTheHeavens
                         shader.Apply(null);
                     }
                 }
-                Utils.DrawBorderString(Main.spriteBatch, line.text, new Vector2(line.X, line.Y), Color.White, 1);
+                Utils.DrawBorderString(Main.spriteBatch, line.Text, new Vector2(line.X, line.Y), Color.White, 1);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
             }
@@ -124,7 +124,7 @@ namespace SealTheHeavens
         public static class NPCs
         {
             /// <summary>
-            /// Finds the nearest npc. <br/>
+            /// Finds the nearest NPC. <br/>
             /// <summary>
             public static int FindNearestNPC(Vector2 position, float maxDistance = 999999f)
             {
@@ -139,7 +139,7 @@ namespace SealTheHeavens
                 return nearestTarget;
             }
             /// <summary>
-            /// Finds the nearest npc but is direct. <br/>
+            /// Finds the nearest NPC but is direct. <br/>
             /// <summary>
             public static NPC FindNearestNPCDirect(Vector2 position, float maxDistance = 9999999f)
             {
@@ -216,7 +216,7 @@ namespace SealTheHeavens
                     Vector2 vector1 = Vector2.UnitY * speed;
                     vector1 = vector1.RotatedBy((i - (amount / 2 - 1)) * 6.28318548f / amount) + pos;
                     Vector2 vector2 = vector1 - pos;
-                    int d = Dust.NewDust(vector1 + vector2, 0, 0, dust, 0f, 0f, 0, default(Color), scale);
+                    int d = Dust.NewDust(vector1 + vector2, 0, 0, dust, 0f, 0f, 0, default, scale);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].velocity = vector2;
                 }
@@ -228,7 +228,7 @@ namespace SealTheHeavens
             {
                 for (int i = 0; i < 20; i++)
                 {
-                    Vector2 offset = new Vector2();
+                    Vector2 offset = new();
                     double angle = Main.rand.NextDouble() * 2d * Math.PI; // Main.rand.NextDouble * 2d * Math.PI
                     offset.X += (float)(Math.Sin(angle) * (distance + Main.rand.NextFloat(-difference / 2, difference / 2)));
                     offset.Y += (float)(Math.Cos(angle) * (distance + Main.rand.NextFloat(-difference / 2, difference / 2)));
@@ -248,7 +248,7 @@ namespace SealTheHeavens
                 offset *= Vector2.Distance(from, to) / amount;
                 for (int i = 0; i <= amount; i++)
                 {
-                    int d = Dust.NewDust(from + offset * i, 0, 0, dust, 0f, 0f, 0, default(Color), scale);
+                    int d = Dust.NewDust(from + offset * i, 0, 0, dust, 0f, 0f, 0, default, scale);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].velocity = Vector2.Zero;
                 }
@@ -286,15 +286,15 @@ namespace SealTheHeavens
         public static class Syncing
         {
             /// <summary>
-            /// Synchronizes a projectile. <br/>
+            /// Synchronizes a Projectile. <br/>
             /// <summary>
-            public static void SyncProjectile(int projectile)
+            public static void SyncProjectile(int Projectile)
             {
                 if (Main.netMode == NetmodeID.Server)
-                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, projectile);
+                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, Projectile);
             }
             /// <summary>
-            /// Synchronizes a npc. <br/>
+            /// Synchronizes a NPC. <br/>
             /// <summary>
             public static void SyncNPC(int npc)
             {
@@ -373,7 +373,7 @@ namespace SealTheHeavens
             public static float ZerotoOne(float multiplier = 1f, int mode = 0, float differentiator = 0)
             {
                 double rad = mode == 0 ? Math.PI : mode == 1 ? Math.PI * 2 : Math.PI / 2;
-                return (float)Math.Sin(((Main.GlobalTime + differentiator) * multiplier) % rad);
+                return (float)Math.Sin((Main.GlobalTimeWrappedHourly + differentiator) * multiplier % rad);
             }
         }
         public static class Colors
@@ -383,13 +383,13 @@ namespace SealTheHeavens
             /// <summary>
             public static Color Celestial(float speed = 1f)
             {
-                return Helper.Colors.lerp4(Color.Orange, Color.LightBlue, Color.Violet, Color.Cyan, Helper.Numbers.ZerotoOne(1, 2));
+                return Helper.Colors.Lerp4(Color.Orange, Color.LightBlue, Color.Violet, Color.Cyan, Helper.Numbers.ZerotoOne(1, 2));
             }
             public static Color Random()
             {
                 return new Color(Main.rand.Next(0, 256), Main.rand.Next(0, 256), Main.rand.Next(0, 256));
             }
-            public static Color lerp3(Color color1, Color color2, Color color3, float amount)
+            public static Color Lerp3(Color color1, Color color2, Color color3, float amount)
             {
                 Color color = Color.Transparent;
                 if (amount <= .33f)
@@ -406,7 +406,7 @@ namespace SealTheHeavens
                 }
                 return color;
             }
-            public static Color lerp4(Color color1, Color color2, Color color3, Color color4, float amount)
+            public static Color Lerp4(Color color1, Color color2, Color color3, Color color4, float amount)
             {
                 Color color = Color.Transparent;
                 if (amount <= .25f)
@@ -427,7 +427,7 @@ namespace SealTheHeavens
                 }
                 return color;
             }
-            public static Color lerpPlus(Color[] colors, float amount)
+            public static Color LerpPlus(Color[] colors, float amount)
             {
                 Color color = Color.Transparent;
                 for (int i = 0; i <= colors.Length; i++)

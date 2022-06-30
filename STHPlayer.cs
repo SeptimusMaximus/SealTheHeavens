@@ -9,18 +9,18 @@ using Terraria.GameInput;
 
 namespace SealTheHeavens
 {
-    public class MyPlayer : ModPlayer
+    public class STHPlayer : ModPlayer
     {
-        private const int saveVersion = 0;
+        //private const int saveVersion = 0;
         public bool SpicySpaceSnakeMinion;
 		public bool minionName = false;
 		public bool BirdBuff = false;
 
 		public bool StarsrykesRespawnBonus;
-		int StarsrykesRespawnBonusCount;
-		int StarsrykesRespawnBonusTime;
-		bool StarsrykesRespawnBonusCheck;
-		int StarsrykesRespawnBonusHit;
+        //readonly int StarsrykesRespawnBonusCount;
+		//readonly int StarsrykesRespawnBonusTime;
+		//readonly bool StarsrykesRespawnBonusCheck;
+		//readonly int StarsrykesRespawnBonusHit;
 
         public override void ResetEffects()
         {

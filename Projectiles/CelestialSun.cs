@@ -17,18 +17,18 @@ namespace SealTheHeavens.Projectiles
 
         public override void SetDefaults()
         {
-			projectile.aiStyle = -1;
-			projectile.width = 30;
-			projectile.height = 30;
-            projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.tileCollide = false;
-			projectile.penetrate = 5;
-			projectile.extraUpdates = 1;
-			projectile.timeLeft = 175;
-			projectile.magic = true;
-			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 30;
+			Projectile.aiStyle = -1;
+			Projectile.width = 30;
+			Projectile.height = 30;
+            Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.tileCollide = false;
+			Projectile.penetrate = 5;
+			Projectile.extraUpdates = 1;
+			Projectile.timeLeft = 175;
+            Projectile.DamageType = DamageClass.Magic;
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 30;
         }
 
 		private const float maxTicks = 60f;
@@ -36,27 +36,27 @@ namespace SealTheHeavens.Projectiles
 
 		public override void AI()
         {
-            Lighting.AddLight((int)(projectile.Center.X / 16f), (int)(projectile.Center.Y / 16f), 0.7f, 0.5f, 0.2f);
+            Lighting.AddLight((int)(Projectile.Center.X / 16f), (int)(Projectile.Center.Y / 16f), 0.7f, 0.5f, 0.2f);
 
-			int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 64, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 100, default(Color), 0.25f);
+			int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 64, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 100, default(Color), 0.25f);
 			Main.dust[dust].noGravity = true;
 			Main.dust[dust].scale = 1f;
 
-			projectile.rotation += 0.2f;
+			Projectile.rotation += 0.2f;
 			float maxdist = 600;
 			for(int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC n = Main.npc[i];
-                if (projectile.Distance(n.Center) < maxdist && n.active && !n.friendly)
+                if (Projectile.Distance(n.Center) < maxdist && n.active && !n.friendly)
                 {
-                    projectile.ai[0] = n.whoAmI;
-                    maxdist = projectile.Distance(n.Center);
+                    Projectile.ai[0] = n.whoAmI;
+                    maxdist = Projectile.Distance(n.Center);
                 }
             }
-            if (projectile.ai[0] > 0 && projectile.ai[0] < 200)
+            if (Projectile.ai[0] > 0 && Projectile.ai[0] < 200)
             {
-                Vector2 vel = projectile.DirectionTo(Main.npc[(int)projectile.ai[0]].Center) * 8;
-                projectile.velocity = Vector2.Lerp(projectile.velocity, vel, .1f);
+                Vector2 vel = Projectile.DirectionTo(Main.npc[(int)Projectile.ai[0]].Center) * 8;
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, vel, .1f);
             }
         }
     }

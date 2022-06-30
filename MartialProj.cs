@@ -20,9 +20,9 @@ namespace SealTheHeavens
 		}
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit) //damage edit not needed, since it's added from the item
         {
-			if (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
+			if (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
             {
-                if (Main.rand.Next(1, 101) < (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
+                if (Main.rand.Next(1, 101) < (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
                 {
                     crit = true;
                 }
@@ -30,9 +30,9 @@ namespace SealTheHeavens
 		}
 		public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
         {
-			if (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
+			if (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
             {
-                if (Main.rand.Next(1, 101) < (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
+                if (Main.rand.Next(1, 101) < (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
                 {
                     crit = true;
                 }

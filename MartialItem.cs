@@ -15,7 +15,7 @@ namespace SealTheHeavens
 {
 	public abstract class MartialItem : ModItem
 	{
-		public override bool CloneNewInstances => true;
+		protected override bool CloneNewInstances => true;
 		public int qi = 0;
 
 		public virtual void SafeSetDefaults() {
@@ -23,36 +23,32 @@ namespace SealTheHeavens
 
 		public sealed override void SetDefaults() {
 			SafeSetDefaults();
-			item.melee = false;
-			item.ranged = false;
-			item.magic = false;
-			item.thrown = false;
-			item.summon = false;
+			Item.DamageType = null;
 		}
 
-		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat) {
+		public static void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat) {
 			mult *= MartialPlayer.ModPlayer(player).martialDamage;
 		}
 
-		public override void GetWeaponKnockback(Player player, ref float knockback) {
+		public static void GetWeaponKnockback(Player player, ref float knockback) {
 			knockback += MartialPlayer.ModPlayer(player).martialKB;
 		}
 
-		public override void GetWeaponCrit(Player player, ref int crit) {
+		public static void GetWeaponCrit(Player player, ref int crit) {
 			crit += MartialPlayer.ModPlayer(player).martialCrit;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips) {
-			TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.mod == "Terraria");
+			TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.Mod == "Terraria");
 			if (tt != null) {
-				string[] splitText = tt.text.Split(' ');
+				string[] splitText = tt.Text.Split(' ');
 				string damageValue = splitText.First();
 				string damageWord = splitText.Last();
-				tt.text = damageValue + " martial " + damageWord;
+				tt.Text = damageValue + " martial " + damageWord;
 			}
 
 			//change the color code here to set the color, look up for color code picker and replace the code below. I'm using this for my Artist and Programmer classes
-			tooltips.Insert(1, new TooltipLine(mod, "SealTheHeavens Martial Item", $"[c/faa7ad:-Martial Class-]"));
+			tooltips.Insert(1, new TooltipLine(Mod, "SealTheHeavens Martial Item", $"[c/faa7ad:-Martial Class-]"));
 		}
 		public override void HoldItem(Player player)
         {

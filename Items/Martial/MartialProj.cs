@@ -17,12 +17,13 @@ namespace SealTheHeavens.Items.Martial
     {
 		public override void AI()
         {
+
 		}
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			if (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
+			if (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
             {
-                if (Main.rand.Next(1, 101) < (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
+                if (Main.rand.Next(1, 101) < (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
                 {
                     crit = true;
                 }
@@ -30,9 +31,9 @@ namespace SealTheHeavens.Items.Martial
 		}
 		public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
         {
-			if (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
+			if (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit > 0)
             {
-                if (Main.rand.Next(1, 101) < (Main.player[projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
+                if (Main.rand.Next(1, 101) < (Main.player[Projectile.owner].GetModPlayer<MartialPlayer>().martialCrit))
                 {
                     crit = true;
                 }

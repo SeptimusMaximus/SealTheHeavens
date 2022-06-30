@@ -13,31 +13,31 @@ namespace SealTheHeavens.NPCs.GrandSpiritBattlemage.SpiritFlare
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Celestial Eclipse Moon");
-            Main.projFrames[projectile.type] = 2;
+            Main.projFrames[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            projectile.height = 11;
-            projectile.width = 32;
-            projectile.aiStyle = -1;
-            projectile.damage = 24;
-            projectile.timeLeft = 300;
-            projectile.penetrate = 1;
-            projectile.tileCollide = false;
-            projectile.friendly = false;
-            projectile.hostile = true;
+            Projectile.height = 11;
+            Projectile.width = 32;
+            Projectile.aiStyle = -1;
+            Projectile.damage = 24;
+            Projectile.timeLeft = 300;
+            Projectile.penetrate = 1;
+            Projectile.tileCollide = false;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
         }
 
         int Target
         {
-            get => (int)projectile.ai[0];
-            set => projectile.ai[0] = value;
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
         }
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-            projectile.timeLeft = 0;
+            Projectile.timeLeft = 0;
         }
 
         const int DETECTION_THRESHOLD = 480;
@@ -49,7 +49,7 @@ namespace SealTheHeavens.NPCs.GrandSpiritBattlemage.SpiritFlare
                 float lastDistance = 0;
                 for (int i = 0; i < Main.player.Length; i++)
                 {
-                    float distance = Main.player[i].DistanceSQ(projectile.Center);
+                    float distance = Main.player[i].DistanceSQ(Projectile.Center);
                     if (distance <= Math.Pow(DETECTION_THRESHOLD, 2) && (distance < lastDistance || lastDistance == 0))
                     {
                         lastDistance = distance;
@@ -59,44 +59,44 @@ namespace SealTheHeavens.NPCs.GrandSpiritBattlemage.SpiritFlare
             }
             Target = closest;
         }
-        void SetVelocity() => projectile.velocity = projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
+        void SetVelocity() => Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
         public void TryApproachTarget()
         {
-            if (Target != -1 && projectile.frameCounter < 150)
+            if (Target != -1 && Projectile.frameCounter < 150)
             {
                 var player = Main.player[Target];
-                finalVelocity = -(projectile.Center - player.Center).SafeNormalize(Vector2.UnitX) * projectile.velocity.Length() * 1.04f;
+                finalVelocity = -(Projectile.Center - player.Center).SafeNormalize(Vector2.UnitX) * Projectile.velocity.Length() * 1.04f;
             }
-            projectile.velocity = Vector2.Lerp(projectile.velocity, finalVelocity, 0.25f);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, finalVelocity, 0.25f);
             if (State1)
             {
                 SetVelocity();
             }
         }
 
-        void IncrementFrameCounter() => projectile.frameCounter++;
+        void IncrementFrameCounter() => Projectile.frameCounter++;
         void ChangeState()
         {
-            if (projectile.frameCounter > 145)
+            if (Projectile.frameCounter > 145)
             {
                 State = 1;
             }
         }
         void IfStartedSetFinalVelocity()
         {
-            if (projectile.frameCounter == 0) 
+            if (Projectile.frameCounter == 0) 
             {
-                finalVelocity = projectile.velocity;
+                finalVelocity = Projectile.velocity;
             }
         }
 
-        void FixRotation() => projectile.rotation = projectile.velocity.ToRotation();
+        void FixRotation() => Projectile.rotation = Projectile.velocity.ToRotation();
 
         Vector2 finalVelocity;
         int State
         {
-            get => (int)projectile.ai[0];
-            set => projectile.ai[0] = value;
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
         }
 
         bool State1 => State == 0;

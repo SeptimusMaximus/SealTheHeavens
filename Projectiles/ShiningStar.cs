@@ -18,32 +18,32 @@ namespace SealTheHeavens.Projectiles
 
         public override void SetDefaults()
         {
-			projectile.aiStyle = -1;
-			projectile.width = 34;
-			projectile.height = 26;
-            projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.tileCollide = true;
-			projectile.penetrate = 1;
-			projectile.timeLeft = 175;
+			Projectile.aiStyle = -1;
+			Projectile.width = 34;
+			Projectile.height = 26;
+            Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.tileCollide = true;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 175;
         }
 
         float rotationInitial
         {
-            get => projectile.ai[0];
-            set => projectile.ai[0] = value;
+            get => Projectile.ai[0];
+            set => Projectile.ai[0] = value;
         }
         float speed
         {
-            get => projectile.ai[1];
+            get => Projectile.ai[1];
         }
         public override void AI()
         {
-            projectile.frameCounter++;
-            projectile.rotation = projectile.velocity.ToRotation();
-            if (projectile.frameCounter == 1)
-                rotationInitial = projectile.rotation;
-            projectile.velocity = new Vector2(speed, 0).RotatedBy(rotationInitial) + new Vector2(0, (float)Math.Sin(projectile.frameCounter/6f) * 2f).RotatedBy(rotationInitial);
+            Projectile.frameCounter++;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            if (Projectile.frameCounter == 1)
+                rotationInitial = Projectile.rotation;
+            Projectile.velocity = new Vector2(speed, 0).RotatedBy(rotationInitial) + new Vector2(0, (float)Math.Sin(Projectile.frameCounter/6f) * 2f).RotatedBy(rotationInitial);
         }
     }
 }

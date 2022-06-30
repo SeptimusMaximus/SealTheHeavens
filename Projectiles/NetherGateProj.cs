@@ -11,43 +11,43 @@ namespace SealTheHeavens.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Midnight");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 4;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.damage = 20;
-            projectile.aiStyle = -1;
-            projectile.timeLeft = 30;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.damage = 20;
+            Projectile.aiStyle = -1;
+            Projectile.timeLeft = 30;
         }
 
         float threshold
         {
-            get => projectile.ai[0] * 3;
-            set => projectile.ai[0] = value;
+            get => Projectile.ai[0] * 3;
+            set => Projectile.ai[0] = value;
         }
 
         float initialRotation
         {
-            get => projectile.ai[1];
-            set => projectile.ai[1] = value;
+            get => Projectile.ai[1];
+            set => Projectile.ai[1] = value;
         }
 
         public override void AI()
         {
             if (initialRotation == -1)
-                initialRotation = projectile.velocity.ToRotation();
-            if (projectile.velocity.Length() > threshold)
+                initialRotation = Projectile.velocity.ToRotation();
+            if (Projectile.velocity.Length() > threshold)
             {
-                projectile.velocity = -projectile.velocity;
+                Projectile.velocity = -Projectile.velocity;
                 threshold = 9999;
             }
 
             else
             {
-                projectile.velocity -= new Vector2(0, 1.5f).RotatedBy(initialRotation);
+                Projectile.velocity -= new Vector2(0, 1.5f).RotatedBy(initialRotation);
             }
         }
     }

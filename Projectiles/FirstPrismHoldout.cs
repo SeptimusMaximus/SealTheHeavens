@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,49 +20,49 @@ namespace SealTheHeavens.Projectiles
 
 		private float FrameCounter
         {
-			get => projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		private float NextManaFrame
         {
-			get => projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => Projectile.ai[1];
+			set => Projectile.ai[1] = value;
         }
 		private float ManaConsumptionRate {
-			get => projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			get => Projectile.localAI[0];
+			set => Projectile.localAI[0] = value;
 		}
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("First Prism");
-			Main.projFrames[projectile.type] = NumAnimationFrames;
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+			Main.projFrames[Projectile.type] = NumAnimationFrames;
+			ProjectileID.Sets.NeedsUUID[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 34;
-			projectile.height = 468 / 11;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.magic = true;
-			projectile.ignoreWater = true;
+			Projectile.width = 34;
+			Projectile.height = 468 / 11;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.ignoreWater = true;
 		}
 
 		public override void AI()
 		{
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			Vector2 rrp = player.RotatedRelativePoint(player.MountedCenter, true);
 			UpdateDamageForManaSickness(player);
 			FrameCounter += 1f;
 			UpdateAnimation();
 			PlaySounds();
 			UpdatePlayerVisuals(player, rrp);
-			if (projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer)
 			{
 				UpdateAim(rrp, player.HeldItem.shootSpeed);
 
@@ -70,7 +71,7 @@ namespace SealTheHeavens.Projectiles
 				bool manaIsAvailable = !ShouldConsumeMana() || player.CheckMana(player.HeldItem.mana, true, false);
 
 				// The Prism immediately stops functioning if the player is Cursed (player.noItems) or "Crowd Controlled", e.g. the Frozen debuff.
-				// player.channel indicates whether the player is still holding down the mouse button to use the item.
+				// player.channel indicates whether the player is still holding down the mouse button to use the Item.
 				bool stillInUse = player.channel && manaIsAvailable && !player.noItems && !player.CCed;
 
 				// Spawn in the Prism's lasers on the first frame if the player is capable of using the item.
@@ -80,45 +81,45 @@ namespace SealTheHeavens.Projectiles
 
 				// If the Prism cannot continue to be used, then destroy it immediately.
 				else if (!stillInUse) {
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 
 			// This ensures that the Prism never times out while in use.
-			projectile.timeLeft = 2;
+			Projectile.timeLeft = 2;
 		}
 
 		private void UpdateDamageForManaSickness(Player player)
 		{
 			float ownerCurrentMagicDamage = player.allDamage + (player.magicDamage - 1f);
-			projectile.damage = (int)(player.HeldItem.damage * ownerCurrentMagicDamage);
+			Projectile.damage = (int)(player.HeldItem.damage * ownerCurrentMagicDamage);
 		}
 
 		private void UpdateAnimation()
 		{
-			projectile.frameCounter++;
+			Projectile.frameCounter++;
 
 			// As the Prism charges up and focuses the beams, its animation plays faster.
 			int framesPerAnimationUpdate = FrameCounter >= MaxCharge ? 2 : FrameCounter >= (MaxCharge * 0.66f) ? 3 : 4;
 
 			// If necessary, change which specific frame of the animation is displayed.
-			if (projectile.frameCounter >= framesPerAnimationUpdate) {
-				projectile.frameCounter = 0;
-				if (++projectile.frame >= NumAnimationFrames) {
-					projectile.frame = 0;
+			if (Projectile.frameCounter >= framesPerAnimationUpdate) {
+				Projectile.frameCounter = 0;
+				if (++Projectile.frame >= NumAnimationFrames) {
+					Projectile.frame = 0;
 				}
 			}
 		}
 
 		private void PlaySounds()
 		{
-			// The Prism makes sound intermittently while in use, using the vanilla projectile variable soundDelay.
-			if (projectile.soundDelay <= 0) {
-				projectile.soundDelay = SoundInterval;
+			// The Prism makes sound intermittently while in use, using the vanilla Projectile variable soundDelay.
+			if (Projectile.soundDelay <= 0) {
+				Projectile.soundDelay = SoundInterval;
 
 				// On the very first frame, the sound playing is skipped. This way it doesn't overlap the starting hiss sound.
 				if (FrameCounter > 1f) {
-					Main.PlaySound(SoundID.Item15, projectile.position);
+					SoundEngine.PlaySound(SoundID.Item15, Projectile.position);
 				}
 			}
 		}
@@ -126,20 +127,20 @@ namespace SealTheHeavens.Projectiles
 		private void UpdatePlayerVisuals(Player player, Vector2 playerHandPos)
 		{
 			// Place the Prism directly into the player's hand at all times.
-			projectile.Center = playerHandPos;
+			Projectile.Center = playerHandPos;
 			// The beams emit from the tip of the Prism, not the side. As such, rotate the sprite by pi/2 (90 degrees).
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
-			projectile.spriteDirection = projectile.direction;
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+			Projectile.spriteDirection = Projectile.direction;
 
-			// The Prism is a holdout projectile, so change the player's variables to reflect that.
+			// The Prism is a holdout Projectile, so change the player's variables to reflect that.
 			// Constantly resetting player.itemTime and player.itemAnimation prevents the player from switching items or doing anything else.
-			player.ChangeDir(projectile.direction);
-			player.heldProj = projectile.whoAmI;
+			player.ChangeDir(Projectile.direction);
+			player.heldProj = Projectile.whoAmI;
 			player.itemTime = 2;
 			player.itemAnimation = 2;
 
-			// If you do not multiply by projectile.direction, the player's hand will point the wrong direction while facing left.
-			player.itemRotation = (projectile.velocity * projectile.direction).ToRotation();
+			// If you do not multiply by Projectile.direction, the player's hand will point the wrong direction while facing left.
+			player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 		}
 
 		private bool ShouldConsumeMana()
@@ -173,39 +174,39 @@ namespace SealTheHeavens.Projectiles
 			}
 
 			// Change a portion of the Prism's current velocity so that it points to the mouse. This gives smooth movement over time.
-			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(projectile.velocity), aim, AimResponsiveness));
+			aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, AimResponsiveness));
 			aim *= speed;
 
-			if (aim != projectile.velocity) {
-				projectile.netUpdate = true;
+			if (aim != Projectile.velocity) {
+				Projectile.netUpdate = true;
 			}
-			projectile.velocity = aim;
+			Projectile.velocity = aim;
 		}
 
 		private void FireBeams()
 		{
 			// If for some reason the beam velocity can't be correctly normalized, set it to a default value.
-			Vector2 beamVelocity = Vector2.Normalize(projectile.velocity);
+			Vector2 beamVelocity = Vector2.Normalize(Projectile.velocity);
 			if (beamVelocity.HasNaNs()) {
 				beamVelocity = -Vector2.UnitY;
 			}
 
 			// This UUID will be the same between all players in multiplayer, ensuring that the beams are properly anchored on the Prism on everyone's screen.
-			int uuid = Projectile.GetByUUID(projectile.owner, projectile.whoAmI);
+			int uuid = Projectile.GetByUUID(Projectile.owner, Projectile.whoAmI);
 
-			int damage = projectile.damage;
-			float knockback = projectile.knockBack;
+			int damage = Projectile.damage;
+			float knockback = Projectile.knockBack;
 			for (int b = 0; b < NumBeams; ++b)
             {
-				Projectile.NewProjectile(projectile.Center, beamVelocity, ModContent.ProjectileType<FirstPrismBeam>(), damage, knockback, projectile.owner, b, uuid);
+				Projectile.NewProjectile(Projectile.Center, beamVelocity, ModContent.ProjectileType<FirstPrismBeam>(), damage, (int)knockback, Projectile.owner, b, uuid);
 			}
 
 			// After creating the beams, mark the Prism as having an important network event. This will make Terraria sync its data to other players ASAP.
-			projectile.netUpdate = true;
+			Projectile.netUpdate = true;
 		}
 
-		// Because the Prism is a holdout projectile and stays glued to its user, it needs custom drawcode.
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		// Because the Prism is a holdout Projectile and stays glued to its user, it needs custom drawcode.
+		public static bool PreDraw(SpriteBatch spriteBatch, Color lightColor, Projectile projectile)
 		{
 			SpriteEffects effects = projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 			Texture2D texture = Main.projectileTexture[projectile.type];
